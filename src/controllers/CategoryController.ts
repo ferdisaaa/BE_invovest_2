@@ -41,9 +41,38 @@ export const getCategoryById = (req: Request, res: Response) => {
     }
 };
 
-//4.mengubah data category berdasarkan id
-export const updateCategory = (req : Request, res : Response) => {}
+//4. Mengubah data category berdasarkan id
+export const updateCategory = (req: Request<{ id: string }>, res: Response) => {
+    const categoryId = Number(req.params.id);
+    const { name } = req.body;
+    if (!name) {
+        res.status(400).json({ error: "Nama category baru harus diisi" });
+    }
+    const index = categories.findIndex((cat) => cat.id === categoryId);
+    if (index !== -1 && categories[index]) {
+        categories[index].name = name;
+        res.status(200).json({ 
+            message: "Data category berhasil diubah", 
+            category: categories[index] 
+        });
+    } else {
+        res.status(404).json({ message: "Data category tidak ditemukan" });
+    }
+};
 
 
 //5. menghapus data category berdasarkan id
-export const deleteCategory = (req : Request, res : Response) => {}
+export const deleteCategory = (req: Request, res: Response) => {
+    const categoryId = Number(req.params.id);
+    const index = categories.findIndex((cat) => cat.id === categoryId);
+    if (index !== -1) {
+        categories.splice(index, 1);
+        res.status(200).json({
+            message: "Data category berhasil dihapus"
+        });
+    } else {
+        res.status(404).json({ 
+            message: "Data category tidak ditemukan" 
+        });
+    }
+};
