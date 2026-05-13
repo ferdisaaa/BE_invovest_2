@@ -12,14 +12,9 @@ export const getEvents = (req : Request, res : Response) => {
 //2. menyimpan data event
 export const createEvent = (req : Request, res : Response) => {
     const { name, date, location, description } = req.body;
-
-    //buat valiadsi sederhana untuk, jika name belum diisi
     if (!name || !date || !location ) {
         res.status(500).json({ error: "Nama event harus diisi" });
     };
-    
-    
-    //jika validasi berhasil
     const newEvent: Event = {
         id: Date.now(),
         name : name,
@@ -27,11 +22,7 @@ export const createEvent = (req : Request, res : Response) => {
         location : location,
         description : description,
     };
-    
-    //jika sudah disusun,simpan ke array atau database
     events.push(newEvent);
-    
-    //jika sudah berhasil disimpan, kembalikan response sukses
     res.status(200).json({message :"Data berhasil disimpan", event : newEvent});
 };
 
