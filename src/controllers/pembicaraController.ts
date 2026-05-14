@@ -35,8 +35,47 @@ export const createPembicara = (req : Request, res : Response) => {
 };
 
 //3. menampilkan data pembicara berdasarkan id
-export const getPembicaraById = (req : Request, res : Response) => {};
+export const getPembicaraById = (req: Request, res: Response) => {
+    const pembicaraId = Number(req.params.id as string);
+    const foundPembicara = pembicara.find((p) => p.id === pembicaraId);
+    if (foundPembicara) {
+        res.status(200).json(foundPembicara);
+    } else {
+        res.status(404).json({ message: "Data pembicara tidak ditemukan" });
+    }
+};
 //4. mengubah pembicara berdasarkan id
-export const updatePembicara = (req : Request, res : Response) => {};
+export const updatePembicara = (req: Request<{ id: string }>, res: Response) => {
+    const pembicaraId = Number(req.params.id);
+    const { name, role, foto } = req.body;
+    if (!name || !role || !foto) {
+        res.status(400).json({ error: "Semua field harus diisi" });
+    }
+    const index = pembicara.findIndex((p) => p.id === pembicaraId);
+    if (index !== -1 && pembicara[index]) {
+        pembicara[index].name = name;
+        pembicara[index].role = role;
+        pembicara[index].foto = foto;
+        res.status(200).json({ 
+            message: "Data pembicara berhasil diubah", 
+            pembicara: pembicara[index] 
+        });
+    } else {
+        res.status(404).json({ message: "Data pembicara tidak ditemukan" });
+    }
+};
 //5. menghapus pembicara berdasarkan id
-export const deletePembicara = (req : Request, res : Response) => {};
+export const deletePembicara = (req: Request, res: Response) => {
+    const pembicaraId = Number(req.params.id);
+    const index = pembicara.findIndex((p) => p.id === pembicaraId);
+    if (index !== -1) {
+        pembicara.splice(index, 1);
+        res.status(200).json({
+            message: "Data pembicara berhasil dihapus"
+        });
+    } else {
+        res.status(404).json({ 
+            message: "Data pembicara tidak ditemukan" 
+        });
+    }
+};
